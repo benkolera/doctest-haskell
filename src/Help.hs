@@ -23,7 +23,9 @@ usage = unlines [
         , "              numbers. Can specify more than one of this option."
         , "              e.g: --dt-select=Foo       All tests in Foo"
         , "                   --dt-select=Foo:13    Foo line 13 " 
-        , "                   --dt-select=Bar:13-15 Foo lines 13-15"
+        , "                   --dt-select=Foo:13-15 Foo lines 13-15"
+        , "                   --dt-select=Foo:13-   Foo lines 13 till end"
+        , "                   --dt-select=Foo:-13   Foo lines start till 13"
         ]
 
 printVersion :: IO ()
