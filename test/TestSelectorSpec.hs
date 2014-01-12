@@ -36,9 +36,9 @@ spec = do
       (Right $ Args [TestSelector "foo" AllLines] ["rest"])
       
     it "should return a function name with module.func" $ 
-      extractTestSelectors [ "--dt-select=foo.function", "rest"]
+      extractTestSelectors [ "--dt-select=foo.bar:function", "rest"]
       `shouldBe`
-      (Right $ Args [TestSelector "foo" $ FunctionName "function"] ["rest"])
+      (Right $ Args [TestSelector "foo.bar" $ FunctionName "function"] ["rest"])
 
     it "should return left if just line numbers given" $
       extractTestSelectors [ "--dt-select=21-23"]
@@ -59,17 +59,6 @@ spec = do
       extractTestSelectors [ "--dt-select=Foo:"]
       `shouldBe`
       lineSelectorParseError ":"
-
-
-    it "should return left if start line isn't a number" $
-      extractTestSelectors [ "--dt-select=Foo:bar" ]
-      `shouldBe`
-      lineSelectorParseError ":bar"
-      
-    it "should return left if start line isn't a number" $
-      extractTestSelectors [ "--dt-select=Foo:1-foo" ]
-      `shouldBe`
-      lineSelectorParseError ":1-foo"
 
   describe "filterModuleContent" $ do
     let loc1 = Located (Location "" 13) (Property "foo")

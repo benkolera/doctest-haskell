@@ -26,7 +26,7 @@ usage = unlines [
         , "                   --dt-select=Foo:13-15 Foo lines 13-15"
         , "                   --dt-select=Foo:13-   Foo lines 13 till end"
         , "                   --dt-select=Foo:-13   Foo lines start till 13"
-        , "                   --dt-select=Foo.func  Tests involving func in Foo"
+        , "                   --dt-select=Foo:func  Tests involving func in Foo"
         ]
 
 printVersion :: IO ()

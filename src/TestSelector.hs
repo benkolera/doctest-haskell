@@ -113,7 +113,7 @@ extractTestSelectors = foldl accumSelector $ Right mempty
       return $ SingleLine start
 
     parseFunctionName = do
-      expectText "."
+      expectText ":"
       name <- spanParse (not . isSpace) "function name"
       expectEof
       return $ FunctionName name
@@ -123,7 +123,7 @@ extractTestSelectors = foldl accumSelector $ Right mempty
       modRest  <- fromMaybe "" <$> tryParse (spanParse isModuleChar "Module name")
       return (modStart:modRest)
       where
-        isModuleChar = liftA2 (&&) (/= ':') (/= '.')
+        isModuleChar = (/= ':')
 
     firstMatch ps desc = StateT $ \s ->
       maybe
