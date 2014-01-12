@@ -7,7 +7,7 @@ import           Extract (Module (Module))
 import           Location 
                  ( Located (Located)
                  ,Location (Location,UnhelpfulLocation))
-import           Parse (DocTest (Property),moduleContent)
+import           Parse (DocTest (Example,Property),moduleContent)
 main :: IO ()
 main = hspec spec
 
@@ -35,6 +35,11 @@ spec = do
       `shouldBe`
       (Right $ Args [TestSelector "foo" AllLines] ["rest"])
       
+    it "should return a function name with module.func" $ 
+      extractTestSelectors [ "--dt-select=foo.function", "rest"]
+      `shouldBe`
+      (Right $ Args [TestSelector "foo" $ FunctionName "function"] ["rest"])
+
     it "should return left if just line numbers given" $
       extractTestSelectors [ "--dt-select=21-23"]
       `shouldBe`
@@ -67,9 +72,9 @@ spec = do
       lineSelectorParseError ":1-foo"
 
   describe "filterModuleContent" $ do
-    let loc1 = Located (Location "" 13) (Property " ")
-        loc2 = Located (Location "" 22) (Property " ")
-        loc3 = Located (Location "" 24) (Property " ")
+    let loc1 = Located (Location "" 13) (Property "foo")
+        loc2 = Located (Location "" 22) (Property "bar")
+        loc3 = Located (Location "" 24) (Example "bar" ["42"])
         loc4 = Located (UnhelpfulLocation "") (Property " ")
         testModule = Module "foo" Nothing [[loc1,loc2,loc3,loc4]]
 
@@ -105,6 +110,11 @@ spec = do
       filterModuleContent [TestSelector "foo" $ FromEnd 22] testModule
       `shouldBe`
       testModule { moduleContent = [[loc2,loc3]] }
+      
+    it "should include all props and expressions that include FuncName Str" $
+      filterModuleContent [TestSelector "foo" $ FunctionName "bar"] testModule
+      `shouldBe`
+      testModule {moduleContent = [[loc2,loc3]]}
 
   describe "filterModules" $ do 
     let loc1 = Located (Location "" 13) (Property " ")
@@ -141,5 +151,5 @@ spec = do
 
 lineSelectorParseError :: String -> Either ArgParserError a 
 lineSelectorParseError = 
-  Left . ArgParserError "<Empty>|:<LineNum>|:-<EndLine>|:<StartLine>-|:<StartLine>-<EndLine>" 
+  Left . ArgParserError "<Empty>|.<Func>|:<LnNum>|:-<EndLn>|:<StartLn>-|:<StartLn>-<EndLn>" 
 

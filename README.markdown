@@ -223,6 +223,7 @@ You can choose to run a subset of your doctests in a project by specifying one o
     doctest --dt-select=Foo:22-25 src/*.hs # Doctest between lines 22 and 25 inclusive
     doctest --dt-select=Foo:-25   src/*.hs # Doctest between lines 1 and 25 inclusive
     doctest --dt-select=Foo:25-   src/*.hs # Doctest between lines 25 and last inclusive
+    doctest --dt-select=Foo.func  src/*.hs # Doctests in Foo that involve func
 
 ### Cabal integration
 
